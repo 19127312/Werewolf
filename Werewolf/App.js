@@ -54,45 +54,32 @@ function AuthenticatedStack() {
   );
 }
 
-
+function Navigation() {
+  const isAuthenticated = useSelector(state => state.auth.uid)
+  return <NavigationContainer>
+    {isAuthenticated ? <AuthenticatedStack /> : <AuthStack />}
+  </NavigationContainer>
+}
 function Root() {
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dispatch = useDispatch()
-  useEffect(() => {
-    const subscriber = firebase.auth().onAuthStateChanged((user) => {
-      if (user != null) {
-        setIsLoggedIn(true)
-        setUser(user)
-      } else {
-        setIsLoggedIn(false);
-      }
-      setIsLoading(false)
-    });
-    return subscriber
-  }, [])
-
   useEffect(() => {
     async function fecthToken() {
       const user = await AsyncStorage.getItem("uid")
       if (user) {
         dispatch(setUser(user))
-        setIsLoggedIn(true)
       }
       setIsLoading(false)
     }
     fecthToken()
 
   }, [])
-
   if (isLoading) {
     return <AppLoading />
   }
 
   return (
-    <NavigationContainer>
-      {isLoggedIn ? <AuthenticatedStack /> : <AuthStack />}
-    </NavigationContainer>
+    <Navigation />
   );
 
 }
