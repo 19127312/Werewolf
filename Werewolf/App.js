@@ -14,8 +14,11 @@ import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppLoading from 'expo-app-loading';
 import firebase from 'firebase/compat/app';
-import { logoutFirebase } from './util/firebase';
+import { logoutFirebase, readeData } from './util/firebase';
+import { getDatabase, ref, onValue, set, get, off } from 'firebase/database';
+import { LogBox } from 'react-native';
 
+LogBox.ignoreLogs(['Setting a timer for a long period of time'])
 const Stack = createNativeStackNavigator();
 
 function AuthStack() {
@@ -63,6 +66,9 @@ function Navigation() {
 function Root() {
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch()
+
+
+
   useEffect(() => {
     async function fecthToken() {
       const user = await AsyncStorage.getItem("uid")

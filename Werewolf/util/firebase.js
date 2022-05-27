@@ -1,8 +1,7 @@
 import firebase from 'firebase/compat/app';
 import "firebase/compat/auth";
-import { useSelector } from 'react-redux';
-import { authenticateUser, logoutUser } from '../store/authSlice';
-
+import "firebase/compat/database"
+import { getDatabase, ref, onValue, set, get, off } from 'firebase/database';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -10,6 +9,7 @@ import { authenticateUser, logoutUser } from '../store/authSlice';
 const firebaseConfig = {
     apiKey: "AIzaSyC20ulRx6NZKUjjLW3bH5OD0Vor3uAfyMw",
     authDomain: "werewolf-ab04c.firebaseapp.com",
+    databaseURL: "https://werewolf-ab04c-default-rtdb.asia-southeast1.firebasedatabase.app",
     projectId: "werewolf-ab04c",
     storageBucket: "werewolf-ab04c.appspot.com",
     messagingSenderId: "1027925714304",
@@ -37,4 +37,9 @@ export async function signInFirebase(email, password) {
 
 export function logoutFirebase() {
     firebase.auth().signOut()
+}
+
+export function readeData() {
+
+
 }
