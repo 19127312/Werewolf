@@ -107,22 +107,19 @@ export default function App() {
   return (
     <>
       <StatusBar style="dark" />
-      {/* <Provider store={store}>
-        <Root />
-      </Provider> */}
-      <NavigationContainer>
-        <Stack.Navigator
-
-        >
-          <Stack.Screen name="Starting" component={StartingScreen} options={
-            {
-              headerShown: false,
-            }
-          } />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Signup" component={SignupScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Starting" component={StartingScreen} options={
+              {
+                headerShown: false,
+              }
+            } />
+            <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Đăng nhập" }} />
+            <Stack.Screen name="Signup" component={SignupScreen} options={{ title: "Đăng ký" }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
 
     </>
   );

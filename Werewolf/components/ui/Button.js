@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
     , width: "100%"
     , backgroundColor: Colors.primary100
     , borderRadius: 1000,
-    elevation: 2,
-    shadowColor: Colors.primary100,
+    elevation: 3,
+    shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.5

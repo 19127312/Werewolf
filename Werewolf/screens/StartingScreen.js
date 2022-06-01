@@ -4,11 +4,11 @@ import Button from '../components/ui/Button'
 
 const StartingScreen = ({ navigation }) => {
     function handleOffline() {
-        console.log("off")
+
     }
 
     function handleOnline() {
-
+        navigation.navigate('Login')
     }
     return (
         <View style={styles.root}>
