@@ -16,16 +16,11 @@ function LoginScreen() {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   async function signInHandler({ email, password }) {
-    const db = getDatabase();
-    set(ref(db, 'user/' + 2), {
-      username: "name",
-      email: email,
-      password: password
-    });
     setIsAuthenticating(true)
     try {
       const loginUser = await signInFirebase(email, password)
-      dispatch(authenticate(loginUser.user))
+      console.log(loginUser.user)
+      //dispatch(authenticate(loginUser.user))
     } catch (error) {
       Alert.alert('Authenticate failed', 'Please check your input and try again.')
       setIsAuthenticating(false)

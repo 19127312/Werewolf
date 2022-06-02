@@ -27,6 +27,7 @@ if (!firebase.apps.length) {
 
 
 export async function signUpFirebase(email, password) {
+
     return await firebase.auth().createUserWithEmailAndPassword(email, password)
 }
 

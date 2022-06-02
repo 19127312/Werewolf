@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'
 import { selectUID } from '../store/selectors';
-function WelcomeScreen() {
+function HomeScreen() {
   const [data, setData] = useState('');
   const uid = useSelector(state => state.auth.uid)
   console.log(uid)
@@ -16,7 +16,7 @@ function WelcomeScreen() {
   );
 }
 
-export default WelcomeScreen;
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   rootContainer: {

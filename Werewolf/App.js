@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
-import WelcomeScreen from './screens/WelcomeScreen';
+import HomeScreen from './screens/HomeScreen';
 import { Colors } from './constants/styles';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { store } from './store/store';
@@ -117,6 +117,7 @@ export default function App() {
             } />
             <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Đăng nhập" }} />
             <Stack.Screen name="Signup" component={SignupScreen} options={{ title: "Đăng ký" }} />
+            <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Đăng nhập" }} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
