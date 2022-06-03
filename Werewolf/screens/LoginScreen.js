@@ -3,15 +3,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getDatabase, ref, onValue, child, set, get, off } from 'firebase/database';
 import { StyleSheet, View, Text, Image } from 'react-native';
 
-import { login } from '../util/auth';
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import LoadingOverlay from '../components/ui/LoadingOverlay';
 import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 import { authenticate } from '../store/authSlice'
 import { signInFirebase } from '../util/firebase';
-function LoginScreen() {
+function LoginScreen({ navigation }) {
   const dispatch = useDispatch()
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
@@ -19,8 +18,11 @@ function LoginScreen() {
     setIsAuthenticating(true)
     try {
       const loginUser = await signInFirebase(email, password)
-      console.log(loginUser.user)
-      //dispatch(authenticate(loginUser.user))
+      dispatch(authenticate({
+        uid: loginUser.user.uid,
+        username: loginUser.user.displayName,
+      }))
+      navigation.navigate("Home")
     } catch (error) {
       Alert.alert('Authenticate failed', 'Please check your input and try again.')
       setIsAuthenticating(false)

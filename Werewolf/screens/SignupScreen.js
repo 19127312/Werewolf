@@ -47,7 +47,8 @@ function SignupScreen({ navigation }) {
           uid: newUser.user.uid,
           username: username,
         }))
-        navigation.replace("Home")
+        navigation.navigate("Home")
+
       }
     } catch (error) {
       Alert.alert('Đăng ký thất bại', 'Vui lòng đăng ký lại')

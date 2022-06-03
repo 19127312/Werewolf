@@ -1,14 +1,22 @@
 import { View, Text, StyleSheet, Image } from 'react-native'
 import React from 'react'
 import Button from '../components/ui/Button'
-
+import { useSelector } from 'react-redux';
+import { selectIsAuthenticate } from '../store/selectors';
 const StartingScreen = ({ navigation }) => {
+    //Chỉ đc gọi trong function component, k nên gọi trong function
+    const isAuthenticated = useSelector(state => state.auth.uid)
+
     function handleOffline() {
 
     }
 
     function handleOnline() {
-        navigation.navigate('Login')
+        if (isAuthenticated) {
+            navigation.replace('Home')
+        } else {
+            navigation.navigate('Login')
+        }
     }
     return (
         <View style={styles.root}>

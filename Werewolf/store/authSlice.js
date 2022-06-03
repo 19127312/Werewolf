@@ -19,7 +19,10 @@ const authSlice = createSlice({
             AsyncStorage.removeItem('uid');
         }
         , setUser: (state, action) => {
-            state.uid = action.payload;
+            state.uid = action.payload.uid;
+            state.username = action.payload.username;
+            AsyncStorage.setItem('uid', action.payload.uid);
+            AsyncStorage.setItem('username', action.payload.username);
         }
     }
 })
