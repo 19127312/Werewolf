@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
     display: 'flex'
     , alignItems: 'center'
     , paddingVertical: 14
-    , width: "100%"
     , backgroundColor: Colors.primary100
     , borderRadius: 1000,
     elevation: 3,
