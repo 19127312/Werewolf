@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'
 import { selectUID } from '../store/selectors';
-import { getDatabase, ref, onValue, child, set, get, off } from 'firebase/database';
+import { getDatabase, ref, onValue, child, set, get, off, query, orderByChild } from 'firebase/database';
 import { Room } from '../model/room'
 import RoomItem from '../components/Room/RoomItem';
 import SearchInput from '../components/ui/SearchInput';
@@ -21,10 +21,12 @@ function HomeScreen() {
 
   async function getRoom() {
 
-    const dbRef = ref(getDatabase());
+    const dbRef = getDatabase();
     try {
 
-      const getRooms = await get(child(dbRef, `rooms`))
+      const myQuery = query(ref(dbRef, 'rooms'), orderByChild('sizePlayer'))
+      const getRooms = await get(myQuery)
+      console.log(getRooms)
       return getRooms
 
     } catch (error) {
@@ -40,7 +42,7 @@ function HomeScreen() {
       const getRooms = await getRoom();
       for (const key in getRooms.val()) {
         //console.log(key)
-        const newRoom = new Room(key, getRooms.val()[key].title, getRooms.val()[key].owner, getRooms.val()[key].size, getRooms.val()[key].lock, getRooms.val()[key].password)
+        const newRoom = new Room(key, getRooms.val()[key].title, getRooms.val()[key].owner, getRooms.val()[key].sizePlayer, getRooms.val()[key].lock, getRooms.val()[key].password)
         //console.log(newRoom)
 
         setRooms(curRoom => [...curRoom, newRoom])
@@ -87,7 +89,7 @@ function HomeScreen() {
   function handleJoinRandom() {
 
   }
-  return <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+  return <SafeAreaView style={{ flex: 1, backgroundColor: "white", marginTop: 30 }}>
     <View style={styles.list}>
       <View style={styles.itemContainer}>
 
@@ -114,12 +116,7 @@ function HomeScreen() {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  rootContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 32,
-  },
+
   title: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -134,6 +131,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   }, buttonItem: {
-    backgroundColor: "black", flex: 1, margin: 10
+    backgroundColor: "#1d3557", flex: 1, margin: 10
   }
 });

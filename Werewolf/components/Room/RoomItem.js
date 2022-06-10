@@ -4,7 +4,7 @@ import { Colors } from '../../constants/styles'
 import { Ionicons } from '@expo/vector-icons';
 
 
-const RoomItem = ({ id, owner, size, title, lock }) => {
+const RoomItem = ({ id, owner, sizePlayer, title, lock }) => {
     const navigation = useNavigation()
     function roomPressHandler() {
         console.log(id)
@@ -21,14 +21,14 @@ const RoomItem = ({ id, owner, size, title, lock }) => {
                 <View>
                     <Text style={[styles.textBase, styles.description]}>{title}</Text>
                     <Text style={styles.textBase}>Chủ phòng: {owner}</Text>
-                    <Text style={styles.textBase}>{size}/16 người</Text>
+                    <Text style={styles.textBase}>{sizePlayer}/16 người</Text>
 
                 </View>
                 <View style={{ flex: 1 }}>
 
                 </View>
                 <View style={styles.amount}>
-                    {lock ? <Ionicons name="lock-closed" color="black" size={26} /> : <Ionicons name="lock-open" color={Colors.primary800} size={26} />}
+                    {lock ? <Ionicons name="lock-closed" color="black" size={26} /> : <Ionicons name="lock-open" color="white" size={26} />}
 
                 </View>
             </View>

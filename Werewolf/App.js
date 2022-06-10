@@ -15,6 +15,7 @@ import { LogBox } from 'react-native';
 import StartingScreen from './screens/StartingScreen';
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
+import { Colors } from './constants/styles';
 
 LogBox.ignoreLogs(['Setting a timer for a long period of time'])
 const Stack = createNativeStackNavigator();
@@ -45,10 +46,11 @@ function Navigation() {
     <Stack.Navigator initialRouteName='Starting'>
       <Stack.Screen name="Starting" component={StartingScreen} options={
         {
+
           headerShown: false,
         }
       } />
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Đăng nhập" }} />
       <Stack.Screen name="Signup" component={SignupScreen} options={{ title: "Đăng ký" }} />
     </Stack.Navigator>
