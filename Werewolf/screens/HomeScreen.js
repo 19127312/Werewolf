@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'
 import { selectUID } from '../store/selectors';
-import { getDatabase, ref, onValue, child, set, get, off, query, orderByChild } from 'firebase/database';
+import { getDatabase, ref, startAt, onValue, child, set, get, off, query, orderByChild } from 'firebase/database';
 import { Room } from '../model/room'
 import RoomItem from '../components/Room/RoomItem';
 import SearchInput from '../components/ui/SearchInput';
@@ -19,45 +19,37 @@ function HomeScreen() {
   const [reload, setReload] = useState(false)
   const [searchText, setSearchText] = useState('')
 
-  async function getRoom() {
 
-    const dbRef = getDatabase();
-    try {
-
-      const myQuery = query(ref(dbRef, 'rooms'), orderByChild('sizePlayer'))
-      const getRooms = await get(myQuery)
-      console.log(getRooms)
-      return getRooms
-
-    } catch (error) {
-      console.log(error)
-    }
-  }
   function checkSearchRoom(room, search) {
     return room.title.toLowerCase().includes(search.toLowerCase()) || room.owner.toLowerCase().includes(search.toLowerCase())
   }
   useEffect(() => {
-    //GetRoom
+    //GetRoom //How to get order
     (async () => {
-      const getRooms = await getRoom();
-      for (const key in getRooms.val()) {
-        //console.log(key)
-        const newRoom = new Room(key, getRooms.val()[key].title, getRooms.val()[key].owner, getRooms.val()[key].sizePlayer, getRooms.val()[key].lock, getRooms.val()[key].password)
-        //console.log(newRoom)
+      const dbRef = getDatabase();
+      const myQuery = query(ref(dbRef, 'rooms'), orderByChild('sizePlayer'), startAt(1))
+      get(myQuery).then(snapshot => {
+        snapshot.forEach(getRoom => {
+          const room = new Room(getRoom.key, getRoom.val().title, getRoom.val().owner, getRoom.val().sizePlayer, getRoom.val().lock, getRoom.val().password)
+          setRooms(curRoom => [room, ...curRoom])
 
-        setRooms(curRoom => [...curRoom, newRoom])
-        if (searchText === '') {
-          setfilteredRoom(curRoom => [...curRoom, newRoom])
-        } else {
-          setfilteredRoom(curRoom => {
-            if (checkSearchRoom(newRoom, searchText)) {
-              return [...curRoom, newRoom]
-            } else {
-              return [...curRoom]
-            }
-          })
-        }
-      }
+          if (searchText === '') {
+            setfilteredRoom(curRoom => [room, ...curRoom])
+          } else {
+            setfilteredRoom(curRoom => {
+              if (checkSearchRoom(room, searchText)) {
+                return [room, ...curRoom]
+              } else {
+                return [...curRoom]
+              }
+            })
+          }
+        })
+      })
+
+
+
+
 
     })();
     return () => {
