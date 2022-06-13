@@ -11,45 +11,45 @@ import { Ionicons } from '@expo/vector-icons';
 import IconButton from '../components/ui/IconButton';
 import { Colors } from '../constants/styles'
 import Button from '../components/ui/Button'
+import LoadingOverlay from '../components/ui/LoadingOverlay';
 
 function HomeScreen() {
 
   const [rooms, setRooms] = useState([])
+  const [randomRoom, setRandomRoom] = useState([])
   const [filteredRoom, setfilteredRoom] = useState([])
   const [reload, setReload] = useState(false)
   const [searchText, setSearchText] = useState('')
-
-
+  const [isLoading, setIsLoading] = useState(false)
+  const [isDone, setIsDone] = useState(false)
   function checkSearchRoom(room, search) {
     return room.title.toLowerCase().includes(search.toLowerCase()) || room.owner.toLowerCase().includes(search.toLowerCase())
   }
   useEffect(() => {
     //GetRoom //How to get order
+    //TODO fix setSTate
     (async () => {
       const dbRef = getDatabase();
       const myQuery = query(ref(dbRef, 'rooms'), orderByChild('sizePlayer'), startAt(1))
       get(myQuery).then(snapshot => {
         snapshot.forEach(getRoom => {
           const room = new Room(getRoom.key, getRoom.val().title, getRoom.val().owner, getRoom.val().sizePlayer, getRoom.val().lock, getRoom.val().password)
-          setRooms(curRoom => [room, ...curRoom])
-
-          if (searchText === '') {
-            setfilteredRoom(curRoom => [room, ...curRoom])
-          } else {
-            setfilteredRoom(curRoom => {
-              if (checkSearchRoom(room, searchText)) {
-                return [room, ...curRoom]
-              } else {
-                return [...curRoom]
-              }
-            })
+          if (room.sizePlayer < 16) {
+            setRooms(curRoom => [room, ...curRoom])
+            if (searchText === '') {
+              setfilteredRoom(curRoom => [room, ...curRoom])
+            } else {
+              setfilteredRoom(curRoom => {
+                if (checkSearchRoom(room, searchText)) {
+                  return [room, ...curRoom]
+                } else {
+                  return [...curRoom]
+                }
+              })
+            }
           }
         })
       })
-
-
-
-
 
     })();
     return () => {
@@ -78,8 +78,51 @@ function HomeScreen() {
   function handleCreateRoom() {
 
   }
-  function handleJoinRandom() {
+  // Nhớ đưa mảng vào trong get, rồi mới setState, k đc setState trong forEach của snapshot
+  async function getRooms() {
+    const db = getDatabase();
+    const myQuery = query(ref(db, 'rooms'), orderByChild('sizePlayer'), startAt(1))
+    const myRooms = []
+    get(myQuery).then(snapshot => {
+      snapshot.forEach(getRoom => {
+        const room = new Room(getRoom.key, getRoom.val().title, getRoom.val().owner, getRoom.val().sizePlayer, getRoom.val().lock, getRoom.val().password)
+        if (room.sizePlayer < 16) {
+          myRooms.unshift(room)
+        }
+      })
+      setRooms(myRooms)
+    })
+  }
 
+  useEffect(() => {
+    (async () => {
+      if (isLoading) {
+        await getRooms()
+        setIsLoading(false)
+      } else {
+        const dbRef = ref(getDatabase())
+        console.log(rooms.length)
+        for (let i = 0; i < rooms.length; i++) {
+          const data = await get(child(dbRef, `rooms/${rooms[i].id}`));
+          if (data.exists()) {
+            if (data.val().sizePlayer < 16) {
+              console.log(rooms[i].id)
+              setIsLoading(false)
+              break
+            }
+          }
+        }
+      }
+    })()
+
+  }, [isLoading, rooms])
+
+  function handleJoinRandom() {
+    setRooms([])
+    setIsLoading(true)
+  }
+  if (isLoading) {
+    return <LoadingOverlay message="Tìm room..." />
   }
   return <SafeAreaView style={{ flex: 1, backgroundColor: "white", marginTop: 30 }}>
     <View style={styles.list}>
